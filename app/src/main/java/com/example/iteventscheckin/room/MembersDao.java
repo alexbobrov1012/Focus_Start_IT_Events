@@ -4,8 +4,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import com.example.iteventscheckin.models.Member;
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 import java.util.List;
@@ -21,6 +21,9 @@ public interface MembersDao {
 
     @Query("select * from members_table")
     Single<List<Member>> getAllMembers();
+
+    @Query("select * from members_table where id = :id")
+    Single<Member> getMemberById(int id);
 
     @Query("select * from members_table where lastName LIKE :input OR firstName LIKE :input OR patronymic LIKE :input")
     Single<List<Member>> searchMembers(String input);

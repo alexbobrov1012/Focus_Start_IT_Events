@@ -3,8 +3,8 @@ package com.example.iteventscheckin;
 import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.example.iteventscheckin.room.Event;
-import com.example.iteventscheckin.room.Member;
+import com.example.iteventscheckin.models.Event;
+import com.example.iteventscheckin.models.Member;
 import com.example.iteventscheckin.network.EventApi;
 import com.example.iteventscheckin.network.MemberApi;
 import com.example.iteventscheckin.network.RetrofitProvider;
@@ -25,14 +25,14 @@ public class Repository {
         this.retrofitProvider = retrofitProvider;
     }
 
-    private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private MyRoomDatabase database = App.appInstance.getMyRoomDatabase();
 
 
     public LiveData<List<Event>> getAllEvents() {
         final MutableLiveData<List<Event>> data = new MutableLiveData<>();
-        mDisposable.add(retrofitProvider.getRetrofit().create(EventApi.class).getAllEvents()
+        disposable.add(retrofitProvider.getRetrofit().create(EventApi.class).getAllEvents()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
@@ -50,7 +50,7 @@ public class Repository {
                     }
                 }));
 
-        mDisposable.add(database.eventDao().getAllEvents()
+        disposable.add(database.eventDao().getAllEvents()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<List<Event>>() {
@@ -64,8 +64,28 @@ public class Repository {
                         Log.d("DEBUG", "ERROR_DB_EVENTS" + e.getMessage());
                     }
                 }));
-       // mDisposable.clear();
+       // disposable.clear();
         return data;
+    }
+    
+    public LiveData<Member> getMemberById(int memberId) {
+        final MutableLiveData<Member> data = new MutableLiveData<>();
+        disposable.add(database.membersDao().getMemberById(memberId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Member>() {
+                    @Override
+                    public void onSuccess(Member member) {
+                        data.setValue(member);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                }));
+        return data;
+        
     }
 
     public Single<List<Member>> getSearchResult(String input) {
@@ -76,7 +96,7 @@ public class Repository {
 
     public Single<List<Member>> getAllMembers(int eventId) {
         final MutableLiveData<List<Member>> data = new MutableLiveData<>();
-        mDisposable.add(retrofitProvider.getRetrofit().create(MemberApi.class).getAllMembers(eventId)
+        disposable.add(retrofitProvider.getRetrofit().create(MemberApi.class).getAllMembers(eventId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableSingleObserver<List<Member>>() {

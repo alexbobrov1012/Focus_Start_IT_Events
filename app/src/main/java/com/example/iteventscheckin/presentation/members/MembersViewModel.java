@@ -2,7 +2,7 @@ package com.example.iteventscheckin.presentation.members;
 
 import androidx.lifecycle.ViewModel;
 import com.example.iteventscheckin.App;
-import com.example.iteventscheckin.room.Member;
+import com.example.iteventscheckin.models.Member;
 import io.reactivex.Single;
 
 import java.util.List;

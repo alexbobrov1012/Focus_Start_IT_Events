@@ -1,12 +1,14 @@
-package com.example.iteventscheckin.room;
+package com.example.iteventscheckin.models;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 
 @Entity(tableName = "members_table")
-public class Member {
+public class Member implements Serializable {
 
     @PrimaryKey
     private int id;

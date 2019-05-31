@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.iteventscheckin.R;
-import com.example.iteventscheckin.room.Member;
+import com.example.iteventscheckin.models.Member;
 import com.example.iteventscheckin.presentation.OnItemListClickListener;
 
 import java.util.List;
@@ -46,8 +46,8 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersViewHolder> {
         notifyDataSetChanged();
     }
 
-    public int getMemberId(int position) {
-        return members.get(position).getId();
+    public Member getMemberItem(int position) {
+        return members.get(position);
     }
 
 }

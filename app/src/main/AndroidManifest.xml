@@ -13,6 +13,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
+                android:name=".presentation.memberinfo.MemberInfoActivity"
+                android:label="@string/title_activity_member_info"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
                 android:name=".presentation.members.MembersActivity"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>

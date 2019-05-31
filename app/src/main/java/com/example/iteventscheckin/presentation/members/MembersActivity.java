@@ -1,18 +1,16 @@
 package com.example.iteventscheckin.presentation.members;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.InvalidationTracker;
 import com.example.iteventscheckin.R;
-import com.example.iteventscheckin.room.Member;
+import com.example.iteventscheckin.presentation.memberinfo.MemberInfoActivity;
+import com.example.iteventscheckin.models.Member;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
@@ -20,14 +18,11 @@ import com.example.iteventscheckin.presentation.OnItemListClickListener;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableSingleObserver;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class MembersActivity extends AppCompatActivity implements OnItemListClickListener {
@@ -109,6 +104,9 @@ public class MembersActivity extends AppCompatActivity implements OnItemListClic
     }
     @Override
     public void onItemListClick(int adapterPosition) {
+        Intent intent = new Intent(this, MemberInfoActivity.class);
+        intent.putExtra("member", adapter.getMemberItem(adapterPosition));
+        startActivity(intent);
         Toast.makeText(this, "Clicked",Toast.LENGTH_SHORT).show();
     }
 

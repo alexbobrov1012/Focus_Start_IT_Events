@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.iteventscheckin.room.Event;
+import com.example.iteventscheckin.models.Event;
 import com.example.iteventscheckin.presentation.OnItemListClickListener;
 import com.example.iteventscheckin.R;
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+                name="member"
+                type="com.example.iteventscheckin.models.Member" />
+
+    </data>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.memberinfo.MemberInfoActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:showIn="@layout/activity_member_info"
+            tools:context=".presentation.memberinfo.MemberInfoActivity">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp">
+            <TextView
+                    android:text="@string/member_info_anketa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"/>
+            <TextView
+                    android:text="@string/member_info_FIO"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/memberInfoTitleTextView"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/FIO_textView"
+                    android:text="@{member.lastName +' '+ member.firstName +' '+ member.patronymic}"
+                    style="@style/memberInfoDescTextView"/>
+            <TextView
+                    android:text="@string/member_info_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/memberInfoTitleTextView"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/phone_textView"
+                    android:text="@{member.phone}"
+                    style="@style/memberInfoDescTextView"/>
+            <TextView
+                    android:text="@string/member_info_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/memberInfoTitleTextView"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/city_textView"
+                    android:text="@{member.city}"
+                    style="@style/memberInfoDescTextView"/>
+            <TextView
+                    android:text="@string/member_info_company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/memberInfoTitleTextView"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/company_textView"
+                    android:text="@{member.company}"
+                    style="@style/memberInfoDescTextView"/>
+            <TextView
+                    android:text="@string/member_info_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/memberInfoTitleTextView"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/email_textView"
+                    android:text="@{member.email}"
+                    style="@style/memberInfoDescTextView"/>
+            <TextView
+                    android:text="@string/member_info_register_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/memberInfoTitleTextView"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/register_date_textView"
+                    android:text="@{member.registeredDate}"
+                    style="@style/memberInfoDescTextView"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

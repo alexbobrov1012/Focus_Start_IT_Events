@@ -1,4 +1,4 @@
-package com.example.iteventscheckin.room;
+package com.example.iteventscheckin.models;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

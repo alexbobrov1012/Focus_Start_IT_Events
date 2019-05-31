@@ -1,8 +1,7 @@
 package com.example.iteventscheckin.network;
 
-import com.example.iteventscheckin.room.Member;
+import com.example.iteventscheckin.models.Member;
 import io.reactivex.Single;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 

@@ -1,7 +1,7 @@
 package com.example.iteventscheckin;
 
 import androidx.lifecycle.ViewModel;
-import com.example.iteventscheckin.room.Event;
+import com.example.iteventscheckin.models.Event;
 
 import java.util.List;
 
