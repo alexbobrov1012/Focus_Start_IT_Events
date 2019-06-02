@@ -11,25 +11,39 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+            <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="160dp"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+                    <Button
+                            android:id="@+id/membersRefreshButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/members_refresh_button"
+                        android:background="@drawable/selector_send_message_button"
+                        style="?android:attr/borderlessButtonStyle"/>
+            </androidx.appcompat.widget.Toolbar>
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_members"/>
+
     <ProgressBar
             android:id="@+id/members_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:indeterminateDrawable="@drawable/animation_progress"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

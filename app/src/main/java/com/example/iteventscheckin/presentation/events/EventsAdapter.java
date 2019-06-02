@@ -43,6 +43,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsViewHolder> {
 
     public void setEvents(List<Event> events) {
         this.events = events;
+        notifyDataSetChanged();
     }
 
     public int getEventId(int position) {

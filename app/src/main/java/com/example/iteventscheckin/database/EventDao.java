@@ -1,4 +1,4 @@
-package com.example.iteventscheckin.room;
+package com.example.iteventscheckin.database;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

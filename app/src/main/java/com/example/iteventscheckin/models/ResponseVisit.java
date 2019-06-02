@@ -6,6 +6,11 @@ public class ResponseVisit {
 
     private String message;
 
+    public ResponseVisit(boolean result, String message) {
+        this.result = result;
+        this.message = message;
+    }
+
     public boolean isResult() {
         return result;
     }

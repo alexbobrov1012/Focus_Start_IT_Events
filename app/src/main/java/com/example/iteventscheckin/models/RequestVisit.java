@@ -8,6 +8,12 @@ public class RequestVisit {
 
     private String visitedDate;
 
+    public RequestVisit(int id, boolean isVisited, String visitedDate) {
+        this.id = id;
+        this.isVisited = isVisited;
+        this.visitedDate = visitedDate;
+    }
+
     public int getId() {
         return id;
     }

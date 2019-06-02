@@ -15,13 +15,6 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp">
         <TextView
-                android:text="@string/member_info_anketa"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textAlignment="center"/>
-        <TextView
                 android:text="@string/member_info_FIO"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

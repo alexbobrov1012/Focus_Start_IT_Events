@@ -1,12 +1,12 @@
 package com.example.iteventscheckin;
 
 import android.app.Application;
-import androidx.annotation.NonNull;
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
+import com.example.iteventscheckin.database.AppRoomDatabase;
+import com.example.iteventscheckin.network.EventApi;
+import com.example.iteventscheckin.network.MemberApi;
 import com.example.iteventscheckin.network.RetrofitProvider;
-import com.example.iteventscheckin.room.MyRoomDatabase;
+import com.example.iteventscheckin.network.VisitConfirmationApi;
 
 public class App extends Application {
 
@@ -14,17 +14,20 @@ public class App extends Application {
 
     private Repository repository;
 
-    private MyRoomDatabase myRoomDatabase;
+    private AppRoomDatabase roomDatabase;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appInstance = this;
-        myRoomDatabase = Room.databaseBuilder(this,
-                MyRoomDatabase.class, "EventsDB")
+        roomDatabase = Room.databaseBuilder(this,
+                AppRoomDatabase.class, "EventsDB")
                 .build();
         RetrofitProvider retrofitProvider = new RetrofitProvider();
-        repository = new Repository(retrofitProvider);
+        EventApi eventApi = retrofitProvider.getRetrofit().create(EventApi.class);
+        MemberApi memberApi = retrofitProvider.getRetrofit().create(MemberApi.class);
+        VisitConfirmationApi visitConfirmationApi = retrofitProvider.getRetrofit().create(VisitConfirmationApi.class);
+        repository = new Repository(retrofitProvider, eventApi, memberApi, visitConfirmationApi);
 
     }
 
@@ -32,7 +35,7 @@ public class App extends Application {
         return repository;
     }
 
-    public MyRoomDatabase getMyRoomDatabase() {
-        return myRoomDatabase;
+    public AppRoomDatabase getRoomDatabase() {
+        return roomDatabase;
     }
 }

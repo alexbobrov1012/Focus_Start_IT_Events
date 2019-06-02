@@ -6,9 +6,14 @@ import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
+
+import java.util.List;
 
 public interface VisitConfirmationApi {
 
-    @POST("/api/v1/Registration/members/event/{eventId}/confirmation?token=cftte@mtest20!9")
-    Single<ResponseVisit> confirmVisit(@Path("eventId") int eventId, @Body RequestVisit requestVisit);
+    @POST("/api/v1/Registration/members/event/{eventId}/confirmation")
+    Single<ResponseVisit> confirmVisit(@Path("eventId") int eventId,
+                                       @Body List<RequestVisit> requestVisit,
+                                       @Query("token") String token);
 }

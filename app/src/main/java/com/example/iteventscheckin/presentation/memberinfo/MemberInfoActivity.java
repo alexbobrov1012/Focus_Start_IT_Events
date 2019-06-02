@@ -19,6 +19,7 @@ public class MemberInfoActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_member_info);
         binding.setMember(member);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        //toolbar.setTitle(R.string.title_activity_member_info);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

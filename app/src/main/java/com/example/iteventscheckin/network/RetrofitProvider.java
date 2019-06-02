@@ -8,10 +8,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class RetrofitProvider {
 
-    //private static final String BASE_URL = "http://10.9.40.19:8081/";
-    //private static final String BASE_URL = "http://192.168.43.196:8081/";
     private static final String BASE_URL = "https://team.cft.ru";
+
     private final Retrofit retrofit;
+
+    public String token = "cftte@mtest20!9";
 
     public RetrofitProvider() {
         retrofit = new Retrofit.Builder()
@@ -23,12 +24,9 @@ public final class RetrofitProvider {
     }
     private OkHttpClient createClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor();
         logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         builder.addInterceptor(logInterceptor);
-
         return builder.build();
 
     }

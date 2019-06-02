@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.iteventscheckin.R;
 import com.example.iteventscheckin.models.Member;
+import com.example.iteventscheckin.presentation.OnCheckBoxClickListener;
 import com.example.iteventscheckin.presentation.OnItemListClickListener;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersViewHolder> {
 
     private List<Member> members;
 
-    private OnItemListClickListener listener;
+    private OnCheckBoxClickListener listener;
 
-    MembersAdapter(OnItemListClickListener listener) {
+    MembersAdapter(OnCheckBoxClickListener listener) {
         this.listener = listener;
     }
 
@@ -48,6 +49,10 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersViewHolder> {
 
     public Member getMemberItem(int position) {
         return members.get(position);
+    }
+
+    public int getMemberid(int position) {
+        return members.get(position).getId();
     }
 
 }

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
-
         <variable
                 name="member"
                 type="com.example.iteventscheckin.models.Member" />
-
     </data>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,13 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp">
-            <TextView
-                    android:text="@string/member_info_anketa"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textAlignment="center"/>
             <TextView
                     android:text="@string/member_info_FIO"
                     android:layout_width="match_parent"

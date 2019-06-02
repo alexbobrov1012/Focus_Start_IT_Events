@@ -13,6 +13,8 @@ public class Member implements Serializable {
     @PrimaryKey
     private int id;
 
+    private int eventId;
+
     private String phone;
 
     private String city;
@@ -44,6 +46,14 @@ public class Member implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     public String getPhone() {

@@ -25,31 +25,38 @@ public class EventsActivity extends AppCompatActivity implements OnItemListClick
     EventsViewModel viewModel;
 
     ProgressBar progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         progressBar = findViewById(R.id.event_progress);
+
+        initAdapter();
+
+        viewModel = ViewModelProviders.of(this).get(EventsViewModel.class);
+        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        viewModel.fetchEvents();
+        viewModel.getAllEvents().observe(this, events -> {
+            adapter.setEvents(events);
+            progressBar.setVisibility(View.GONE);
+        });
+
+    }
+
+    public void initAdapter() {
         RecyclerView recyclerView = findViewById(R.id.eventsRecycleView);
         adapter = new EventsAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        viewModel = ViewModelProviders.of(this).get(EventsViewModel.class);
-        progressBar.setVisibility(View.VISIBLE);
-        viewModel.getAllEvents().observe(this, new Observer<List<Event>>() {
-            @Override
-            public void onChanged(List<Event> events) {
-                adapter.setEvents(events);
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-
     }
 
     @Override
     public void onItemListClick(int adapterPosition) {
         Toast.makeText(this, "Clicked",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MembersActivity.class);
+        intent.putExtra("eventId", adapter.getEventId(adapterPosition));
         startActivity(intent);
     }
 }

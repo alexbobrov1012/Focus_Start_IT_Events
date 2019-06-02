@@ -1,6 +1,7 @@
 package com.example.iteventscheckin.models;
 
 import androidx.room.Entity;
+import androidx.room.OnConflictStrategy;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "events_table")

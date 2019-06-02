@@ -3,8 +3,7 @@ package com.example.iteventscheckin.presentation.events;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.iteventscheckin.presentation.members.ViewModelFactory;
-import com.example.iteventscheckin.room.EventDao;
+import com.example.iteventscheckin.database.EventDao;
 
 public class EventViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

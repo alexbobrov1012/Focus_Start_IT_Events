@@ -1,91 +1,140 @@
 package com.example.iteventscheckin;
 
 import android.util.Log;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import com.example.iteventscheckin.database.AppRoomDatabase;
 import com.example.iteventscheckin.models.Event;
 import com.example.iteventscheckin.models.Member;
+import com.example.iteventscheckin.models.RequestVisit;
+import com.example.iteventscheckin.models.ResponseVisit;
 import com.example.iteventscheckin.network.EventApi;
 import com.example.iteventscheckin.network.MemberApi;
 import com.example.iteventscheckin.network.RetrofitProvider;
-import com.example.iteventscheckin.room.MyRoomDatabase;
+import com.example.iteventscheckin.network.VisitConfirmationApi;
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Repository {
 
     private RetrofitProvider retrofitProvider;
 
-    public Repository(RetrofitProvider retrofitProvider) {
-        this.retrofitProvider = retrofitProvider;
-    }
+    private EventApi eventApi;
+
+    private MemberApi memberApi;
+
+    private VisitConfirmationApi visitConfirmationApi;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    private MyRoomDatabase database = App.appInstance.getMyRoomDatabase();
+    private AppRoomDatabase database = App.appInstance.getRoomDatabase();
 
-
-    public LiveData<List<Event>> getAllEvents() {
-        final MutableLiveData<List<Event>> data = new MutableLiveData<>();
-        disposable.add(retrofitProvider.getRetrofit().create(EventApi.class).getAllEvents()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<List<Event>>() {
-                    @Override
-                    public void onSuccess(List<Event> eventList) {
-                        database.eventDao().insert(eventList)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribeOn(Schedulers.io())
-                                .subscribe();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("DEBUG", "ERROR_NET_EVENTS" + e.getMessage());
-                    }
-                }));
-
-        disposable.add(database.eventDao().getAllEvents()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<List<Event>>() {
-                    @Override
-                    public void onSuccess(List<Event> eventList) {
-                        data.setValue(eventList);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("DEBUG", "ERROR_DB_EVENTS" + e.getMessage());
-                    }
-                }));
-       // disposable.clear();
-        return data;
+    public Repository(RetrofitProvider retrofitProvider, EventApi eventApi, MemberApi memberApi, VisitConfirmationApi visitConfirmationApi) {
+        this.retrofitProvider = retrofitProvider;
+        this.eventApi = eventApi;
+        this.memberApi = memberApi;
+        this.visitConfirmationApi = visitConfirmationApi;
     }
-    
-    public LiveData<Member> getMemberById(int memberId) {
-        final MutableLiveData<Member> data = new MutableLiveData<>();
-        disposable.add(database.membersDao().getMemberById(memberId)
+
+
+    public Single<List<Event>> getAllEventsFromNet() {
+        return eventApi.getAllEvents(retrofitProvider.token)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<Member>() {
-                    @Override
-                    public void onSuccess(Member member) {
-                        data.setValue(member);
+                .flatMap(events -> {
+                    if(events.size() != 0) {
+                        return putEventsToDatabase(events);
+                    } else {
+                        return Single.just(events);
                     }
+                });
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
+    public Single<List<Event>> getAllEventsFromDataBase() {
+        return database.eventDao().getAllEvents()
+                .subscribeOn(Schedulers.io());
+    }
 
-                    }
-                }));
-        return data;
-        
+    public Single<List<Event>> getAllEvents() {
+        return getAllEventsFromNet()
+                .onErrorResumeNext(throwable -> {
+                    Log.d("DEBUG","Connection lost, loading local data.");
+                    return App.appInstance.getRepository()
+                            .getAllEventsFromDataBase();
+                });
+    }
+
+    private Single<List<Event>> putEventsToDatabase(List<Event> events) {
+        return database.eventDao().insert(events)
+                .subscribeOn(Schedulers.io())
+                .andThen(Single.just(events));
+    }
+
+    ///////////////////////////////
+
+    private Single<List<Member>> getAllMembersFromNet(int eventId) {
+        return memberApi.getAllMembers(eventId, retrofitProvider.token)
+                .subscribeOn(Schedulers.io())
+                .flatMap(members -> {
+                    return Observable.fromIterable(members);
+                })
+                .map(member -> {
+                    member.setEventId(eventId);
+                    //Log.d("DEBUG", member.getId() + " " + member.getEventId()+ " id");
+                    return member;
+                })
+                .toList()
+                .flatMap(members -> {
+                    return putMembersToDatabase(members);
+                });
+    }
+
+    public Single<List<Member>> getAllMembersFromDataBase(int eventId) {
+        return database.membersDao().getAllMembers(eventId)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<List<Member>> getAllMembers(int eventId) {
+        return getAllMembersFromNet(eventId)
+                .onErrorResumeNext(throwable -> {
+                    Log.d("DEBUG","Connection lost, loading local data." + eventId);
+                    return App.appInstance.getRepository()
+                            .getAllMembersFromDataBase(eventId);
+                });
+    }
+
+    private Single<List<Member>> putMembersToDatabase(List<Member> members) {
+        return database.membersDao().insert(members)
+                .subscribeOn(Schedulers.io())
+                .andThen(Single.just(members));
+    }
+
+
+    public Single<ResponseVisit> confirmVisit(int eventId, int memberId, boolean isChecked) {
+        RequestVisit requestVisit = new RequestVisit(memberId, isChecked, "2019-04-12T22:25:56");
+        return visitConfirmationApi.confirmVisit(eventId, Arrays.asList(requestVisit), retrofitProvider.token)
+                    .subscribeOn(Schedulers.io())
+                    .doOnSuccess(success -> {
+                        updateDatabse(memberId, isChecked);
+                    })
+                    .onErrorReturn(new Function<Throwable, ResponseVisit>() {
+                        @Override
+                        public ResponseVisit apply(Throwable throwable) throws Exception {
+                            return new ResponseVisit(false, throwable.getMessage());
+                        }
+                    });
+                    //.delaySubscription(updateDatabse(memberId, ));
+    }
+
+    private boolean updateDatabse(int memberId, boolean isChecked) {
+        return database.membersDao().updateVisited(memberId, isChecked)
+                .subscribeOn(Schedulers.io())
+                .blockingAwait(4, TimeUnit.SECONDS);
     }
 
     public Single<List<Member>> getSearchResult(String input) {
@@ -94,29 +143,5 @@ public class Repository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<List<Member>> getAllMembers(int eventId) {
-        final MutableLiveData<List<Member>> data = new MutableLiveData<>();
-        disposable.add(retrofitProvider.getRetrofit().create(MemberApi.class).getAllMembers(eventId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableSingleObserver<List<Member>>() {
-                        @Override
-                        public void onSuccess(List<Member> memberList) {
-                            Log.d("DEBUG", "retrofit ok");
-                            database.membersDao().insert(memberList)
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe();
-                        }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Log.d("DEBUG", "ERROR_NET_MEMBERS" + e.getMessage());
-                        }
-                    }));
-
-       return database.membersDao().getAllMembers()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 }
