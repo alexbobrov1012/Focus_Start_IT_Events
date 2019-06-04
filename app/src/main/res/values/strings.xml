@@ -9,4 +9,6 @@
     <string name="member_info_email">Эл. почта</string>
     <string name="member_info_register_date">Дата регистрации</string>
     <string name="members_refresh_button">Обновить</string>
+    <string name="events_no_date">not dated</string>
+    <string name="date_utils_pattern">yyyy-MM-dd HH:mm:ss</string>
 </resources>
